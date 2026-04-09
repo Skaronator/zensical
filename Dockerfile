@@ -88,13 +88,28 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # -----------------------------------------------------------------------------
 
-FROM scratch AS image
+FROM alpine:3.23 AS image
+
+# Install runtime dependencies for the copied Python distribution
+RUN apk add --no-cache \
+    ca-certificates \
+    gdbm \
+    libbz2 \
+    libcrypto3 \
+    libffi \
+    libgcc \
+    libncursesw \
+    libpanelw \
+    libssl3 \
+    libuuid \
+    readline \
+    sqlite-libs \
+    tini \
+    tzdata \
+    xz-libs \
+    zstd-libs
 
 # Copy relevant files from build
-COPY --from=build /bin/sh /bin/sh
-COPY --from=build /sbin/tini /sbin/tini
-COPY --from=build /lib /lib
-COPY --from=build /usr/lib /usr/lib
 COPY --from=build /usr/local /usr/local
 
 # Set working directory and expose preview server port
